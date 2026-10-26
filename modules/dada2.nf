@@ -118,6 +118,7 @@ process mergeASV {
     """
     qiime feature-table merge \
         --i-tables dada2-ccs_table*.qza \
+        --p-overlap-method $params.merge_overlap_method \
         --o-merged-table dada2-ccs_table_merged.qza
     
     qiime feature-table merge-seqs \

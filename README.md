@@ -5,6 +5,7 @@
   - [Installation and usage](#installation-and-usage)
   - [HPC and job scheduler usage](#hpc)
   - [Speeding up the denoising process](#pooling)
+  - [Combining sequencing runs of the same sample](#combining-runs)
   - [Run time and compute requirements](#runtime)
   - [Frequently asked questions (FAQ)](#faq)
   - [References](#references)
@@ -96,6 +97,13 @@ nextflow run main.nf --help
                          (default 5)
   --min_asv_sample    ASV must exist in at least min_asv_sample to be retained. 
                       Set this to 0 to disable. (default 1)
+  --group_samples_by    Metadata column used to combine libraries from the same
+                      biological sample (e.g. "subject"). Requires one metadata
+                      row per library. Combined outputs are written to
+                      results/combined. (default: off)
+  --merge_overlap_method    Overlap method passed to "qiime feature-table merge"
+                      when merging denoised pools. Use "sum" if the same sample-id
+                      occurs in more than one pool. (default: "error")
   --vsearch_identity    Minimum identity to be considered as hit (default 0.97)
   --rarefaction_depth    Rarefaction curve "max-depth" parameter. By default the pipeline
                          automatically select a cut-off above the minimum of the denoised 
@@ -208,6 +216,18 @@ TSV file on the other hand splits each sample into separate `qza` files accordin
 if you have 8 samples and set the `pool` column into two groups, you will have 2
 separate `qza` files for the `DADA2` denoise step. Within each of the two denoising steps, the `--pooling_method`
 parameter controls whether DADA2 splits the samples for denoising or not.
+
+## Combining sequencing runs of the same sample <a name="combining-runs"></a>
+
+If the same DNA extract was prepared and sequenced more than once (for example
+two library preps months apart), do not concatenate the FASTQ files. Denoise
+each sequencing run separately by giving libraries from the same run the same
+`pool` value in the metadata, add a column identifying the biological sample
+(for example `subject`), and run the pipeline with `--group_samples_by subject`.
+The pipeline then sums the ASV table per subject and writes combined diversity,
+taxonomy and barplot outputs to `results/combined`. See
+[combining_runs.md](combining_runs.md) for the metadata layout, caveats and
+instructions for merging runs that were processed separately.
 
 ## Run time and compute requirements <a name="runtime"></a>
 

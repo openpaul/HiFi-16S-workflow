@@ -37,6 +37,13 @@ def helpMessage() {
                             (default 5)
     --min_asv_sample    ASV must exist in at least min_asv_sample to be retained. 
                         Set this to 0 to disable. (default 1)
+    --group_samples_by    Metadata column used to combine libraries from the same
+                        biological sample (e.g. "subject"). Requires one metadata
+                        row per library. Combined outputs are written to
+                        results/combined. (default: off)
+    --merge_overlap_method    Overlap method passed to "qiime feature-table merge"
+                        when merging denoised pools. Use "sum" if the same sample-id
+                        occurs in more than one pool. (default: "error")
     --vsearch_identity    Minimum identity to be considered as hit (default 0.97)
     --rarefaction_depth    Rarefaction curve "max-depth" parameter. By default the pipeline
                             automatically select a cut-off above the minimum of the denoised 

@@ -26,6 +26,8 @@ include { mergeASV; filter_dada2; dada2_qc; dada2_rarefaction } from './modules/
 include { class_tax; dada2_assignTax } from './modules/taxonomy'
 include { export_biom; export_biom_skip_nb } from './modules/taxonomy'
 
+include { combine_runs; export_combined; barplot_combined; qiime2_diversity_combined } from './modules/combine'
+
 include { qiime2_phylogeny_diversity } from './modules/visualization'
 include { barplot; barplot_nb; html_rep; html_rep_skip_cutadapt } from './modules/visualization'
 
@@ -69,6 +71,8 @@ log_text = """
     Parameters set for pb-16S-nf pipeline for PacBio HiFi 16S
     =========================================================
     Number of samples in samples TSV: $n_sample
+    Group libraries into samples using metadata column: $params.group_samples_by
+    Feature table overlap method when merging pools: $params.merge_overlap_method
     Filter input reads above Q: $params.filterQ
     Trim primers with cutadapt: $trim_cutadapt
     Limit to N reads if exceeding N reads (0 = disabled): $params.downsample
@@ -223,6 +227,29 @@ workflow pb16S {
                       metadata_file, "taxonomy_barplot_nb.qzv")
             nb_tax = dada2_assignTax.out.best_nb_tax_tsv
             biom_file = export_biom.out.biom_vsearch
+        }
+
+        // Combine libraries from the same biological sample
+        if (params.group_samples_by) {
+            combine_runs(filter_dada2.out.asv_freq, metadata_file,
+                         params.combine_metadata_script, params.group_samples_by)
+            export_combined(combine_runs.out.grouped_table,
+                            filter_dada2.out.asv_seq, class_tax.out.tax_vsearch)
+            barplot_combined(combine_runs.out.grouped_table, class_tax.out.tax_vsearch,
+                             combine_runs.out.grouped_metadata,
+                             "taxonomy_barplot_vsearch_combined.qzv")
+
+            if (params.rarefaction_depth > 0) {
+                qiime2_diversity_combined(combine_runs.out.grouped_table,
+                    combine_runs.out.grouped_metadata,
+                    qiime2_phylogeny_diversity.out.qiime2_tree_qza,
+                    params.rarefaction_depth, dada2_qc.out.alpha_depth)
+            } else {
+                qiime2_diversity_combined(combine_runs.out.grouped_table,
+                    combine_runs.out.grouped_metadata,
+                    qiime2_phylogeny_diversity.out.qiime2_tree_qza,
+                    dada2_qc.out.rarefaction_depth, dada2_qc.out.alpha_depth)
+            }
         }
 
         // Optional PICRUSt2 analysis

@@ -1,3 +1,10 @@
+# Unreleased changelog
+- Added `--group_samples_by` to combine libraries from the same biological sample:
+  libraries are still denoised per pool, then the ASV table is summed per group and
+  combined diversity, taxonomy and barplot outputs are written to `results/combined`.
+- Added `--merge_overlap_method` (default `error`) for `qiime feature-table merge`.
+- Fixed a typo in the `filter_dada2` branch that uses only `--p-min-frequency`.
+
 # v0.9 changelog
 - Refactored codes, split sections into modules
 - Added GreenGenes 2024.10, updated GTDB to r220, and Silva to 138.2, please rerun download_db to get the latest version
