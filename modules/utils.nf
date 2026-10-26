@@ -41,9 +41,10 @@ def helpMessage() {
                         biological sample (e.g. "subject"). Requires one metadata
                         row per library. Combined outputs are written to
                         results/combined. (default: off)
-    --merge_overlap_method    Overlap method passed to "qiime feature-table merge"
-                        when merging denoised pools. Use "sum" if the same sample-id
-                        occurs in more than one pool. (default: "error")
+    --merge_overlap_method    Overlap method passed to "qiime feature-table merge".
+                        One of error_on_overlapping_sample, error_on_overlapping_feature,
+                        average or sum. Use "sum" if the same sample-id occurs in more
+                        than one pool. (default: "error_on_overlapping_sample")
     --vsearch_identity    Minimum identity to be considered as hit (default 0.97)
     --rarefaction_depth    Rarefaction curve "max-depth" parameter. By default the pipeline
                             automatically select a cut-off above the minimum of the denoised 

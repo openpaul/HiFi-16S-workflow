@@ -2,7 +2,8 @@
 - Added `--group_samples_by` to combine libraries from the same biological sample:
   libraries are still denoised per pool, then the ASV table is summed per group and
   combined diversity, taxonomy and barplot outputs are written to `results/combined`.
-- Added `--merge_overlap_method` (default `error`) for `qiime feature-table merge`.
+- Added `--merge_overlap_method` (default `error_on_overlapping_sample`) for
+  `qiime feature-table merge`.
 - Fixed a typo in the `filter_dada2` branch that uses only `--p-min-frequency`.
 
 # v0.9 changelog

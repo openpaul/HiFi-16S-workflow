@@ -37,6 +37,14 @@ include { picrust2; download_db; helpMessage } from './modules/utils'
 if (params.help) exit 0, helpMessage()
 if (params.version) exit 0, log.info(version)
 
+// Validate merge overlap method early, before the long DADA2 steps
+valid_overlap_methods = ['average', 'error_on_overlapping_feature',
+                         'error_on_overlapping_sample', 'sum']
+if (!(params.merge_overlap_method in valid_overlap_methods)) {
+    exit 1, "Invalid --merge_overlap_method '${params.merge_overlap_method}'. " +
+            "Choose from: ${valid_overlap_methods.join(', ')}."
+}
+
 // Dynamic parameter settings based on input
 if (params.input) {
     n_sample = file(params.input).countLines() - 1
