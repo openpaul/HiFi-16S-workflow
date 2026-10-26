@@ -112,8 +112,8 @@ library-level. Use it to check per-run yield and ASV recovery, then use
   and hides run-specific failure modes.
 - **Same sample ID in multiple pools.** The pipeline's sample IDs are library
   IDs, so this should not happen. If you do reuse a sample ID across pools,
-  `mergeASV` needs `--merge_overlap_method sum`; the default `error` stops the
-  run instead of silently summing.
+  `mergeASV` needs `--merge_overlap_method sum`; the default
+  `error_on_overlapping_sample` stops the run instead of silently summing.
 
 ## Merging two already-finished runs manually
 
@@ -128,7 +128,7 @@ semantics and is not equivalent to a joint run.
 qiime feature-table merge \
     --i-tables run_PB334/dada2/dada2-ccs_table_merged.qza \
     --i-tables run_PB479/dada2/dada2-ccs_table_merged.qza \
-    --p-overlap-method error \
+    --p-overlap-method error_on_overlapping_sample \
     --o-merged-table merged/dada2-ccs_table_merged.qza
 
 # 2. Merge representative sequences (identical ASVs collapse to one feature)
@@ -169,8 +169,8 @@ python3 scripts/combine_metadata.py \
 ```
 
 `--p-overlap-method` only matters when a sample ID occurs in both inputs. With
-distinct library IDs the default (`error`) is correct and will flag accidental
-duplicates.
+distinct library IDs the default (`error_on_overlapping_sample`) is correct and
+will flag accidental duplicates.
 
 ## Validation checklist
 
