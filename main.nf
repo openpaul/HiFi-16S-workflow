@@ -27,6 +27,7 @@ include { class_tax; dada2_assignTax } from './modules/taxonomy'
 include { export_biom; export_biom_skip_nb } from './modules/taxonomy'
 
 include { combine_runs; export_combined; barplot_combined; qiime2_diversity_combined } from './modules/combine'
+include { make_phyloseq; make_phyloseq_combined } from './modules/phyloseq'
 
 include { qiime2_phylogeny_diversity } from './modules/visualization'
 include { barplot; barplot_nb; html_rep; html_rep_skip_cutadapt } from './modules/visualization'
@@ -237,6 +238,11 @@ workflow pb16S {
             biom_file = export_biom.out.biom_vsearch
         }
 
+        // Build a phyloseq object for the per-library analysis
+        make_phyloseq(filter_dada2.out.asv_freq, class_tax.out.tax_vsearch,
+                      qiime2_phylogeny_diversity.out.qiime2_tree_qza,
+                      metadata_file, params.make_phyloseq_script)
+
         // Combine libraries from the same biological sample
         if (params.group_samples_by) {
             combine_runs(filter_dada2.out.asv_freq, metadata_file,
@@ -246,6 +252,11 @@ workflow pb16S {
             barplot_combined(combine_runs.out.grouped_table, class_tax.out.tax_vsearch,
                              combine_runs.out.grouped_metadata,
                              "taxonomy_barplot_vsearch_combined.qzv")
+            make_phyloseq_combined(combine_runs.out.grouped_table,
+                                   class_tax.out.tax_vsearch,
+                                   qiime2_phylogeny_diversity.out.qiime2_tree_qza,
+                                   combine_runs.out.grouped_metadata,
+                                   params.make_phyloseq_script)
 
             if (params.rarefaction_depth > 0) {
                 qiime2_diversity_combined(combine_runs.out.grouped_table,

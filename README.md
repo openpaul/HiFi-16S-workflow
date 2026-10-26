@@ -226,7 +226,8 @@ each sequencing run separately by giving libraries from the same run the same
 `pool` value in the metadata, add a column identifying the biological sample
 (for example `subject`), and run the pipeline with `--group_samples_by subject`.
 The pipeline then sums the ASV table per subject and writes combined diversity,
-taxonomy and barplot outputs to `results/combined`. See
+taxonomy and barplot outputs to `results/combined`, including a ready-to-use
+`phyloseq` object (`physeq_combined.rds`). See
 [combining_runs.md](combining_runs.md) for the metadata layout, caveats and
 instructions for merging runs that were processed separately.
 
