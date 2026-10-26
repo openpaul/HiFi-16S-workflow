@@ -44,7 +44,7 @@ read_otu <- function(path) {
         return(phyloseq::otu_table(otu))
     }
 
-    biom <- biomformat::read_biom(path)
+    biom <- suppressWarnings(biomformat::read_biom(path))
     m <- as.matrix(biomformat::biom_data(biom))
     if (is.null(rownames(m)) || is.null(colnames(m))) {
         stop("could not read feature or sample names from ", path, call. = FALSE)
@@ -175,7 +175,13 @@ taxonomy <- taxonomy[features, , drop = FALSE]
 metadata <- metadata[samples, , drop = FALSE]
 
 if (!is.null(tree)) {
-    tree <- phyloseq::prune_trees(tree, features, verbose = FALSE)
+    extra_tips <- setdiff(tree$tip.label, features)
+    if (length(extra_tips) > 0) {
+        tree <- ape::drop.tip(tree, extra_tips)
+    }
+    if (length(tree$tip.label) < 2) {
+        tree <- NULL
+    }
 }
 
 components <- list(
