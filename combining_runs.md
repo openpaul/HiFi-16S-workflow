@@ -84,6 +84,9 @@ The normal per-library outputs are unchanged. In addition:
     counts per sample.
   - `feature-table-tax_vsearch_combined.biom`: combined table with taxonomy,
     suitable for `phyloseq`/`qiime2R`.
+  - `physeq_combined.rds`: `phyloseq` object with the combined ASV table,
+    VSEARCH taxonomy, rooted tree and combined metadata. Load it in R with
+    `readRDS()`.
   - `merged_freq_tax_combined.qzv`: interactive table.
   - `taxonomy_barplot_vsearch_combined.qzv`: taxonomy barplot for the combined
     samples.
@@ -96,6 +99,9 @@ The normal per-library outputs are unchanged. In addition:
 The HTML report (`results/visualize_biom.html`) intentionally remains
 library-level. Use it to check per-run yield and ASV recovery, then use
 `results/combined` for biological interpretation.
+
+A `phyloseq` object for the per-library table is also written to
+`results/physeq_vsearch.rds`, using the same VSEARCH taxonomy and rooted tree.
 
 ## Caveats
 
