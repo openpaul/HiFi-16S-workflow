@@ -118,6 +118,7 @@ process mergeASV {
     """
     qiime feature-table merge \
         --i-tables dada2-ccs_table*.qza \
+        --p-overlap-method $params.merge_overlap_method \
         --o-merged-table dada2-ccs_table_merged.qza
     
     qiime feature-table merge-seqs \
@@ -173,7 +174,7 @@ process filter_dada2 {
     then
         qiime feature-table filter-features \
             --i-table $asv_table \
-            /para--p-min-frequency $min_asv_totalfreq \
+            --p-min-frequency $min_asv_totalfreq \
             --p-filter-empty-samples \
             --o-filtered-table dada2-ccs_table_filtered.qza
     else

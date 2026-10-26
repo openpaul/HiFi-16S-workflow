@@ -12,9 +12,12 @@ process qiime2_phylogeny_diversity {
     val(n_sample)
 
     output:
-    path "*.qza"
+    path "mafft_alignment.qza"
+    path "mafft_alignment_masked.qza"
+    path "phylotree_mafft_unrooted.qza"
     path "core-metrics-diversity"
     path "phylotree_mafft_rooted.nwk", emit:qiime2_tree
+    path "phylotree_mafft_rooted.qza", emit: qiime2_tree_qza
     path "core-metrics-diversity/bray_curtis_distance_matrix.tsv", emit:bray_mat
     path "core-metrics-diversity/weighted_unifrac_distance_matrix.tsv", emit:wunifrac_mat
     path "core-metrics-diversity/unweighted_unifrac_distance_matrix.tsv", emit:unifrac_mat
